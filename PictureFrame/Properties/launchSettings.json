@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PictureFrame (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PictureFrame (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

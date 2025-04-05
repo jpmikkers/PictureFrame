@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="PictureFrame.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:PictureFrame"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:PictureFrame.ViewModels"
+    d:DataContext="{d:DesignInstance Type=vm:MainPageViewModel,
+                                     IsDesignTimeCreatable=False}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:SlideDelayValueConverter x:Key="DelayValueConverter" />
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Page.Resources>
+
+    <SplitView
+        x:Name="splitView"
+        CompactPaneLength="48"
+        DisplayMode="Inline"
+        IsPaneOpen="{Binding IsExpanded}"
+        OpenPaneLength="256"
+        PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+        <SplitView.Pane>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    x:Name="PaneHeader"
+                    Grid.Row="0"
+                    Margin="60,12"
+                    Style="{StaticResource BaseTextBlockStyle}"
+                    Text="Slideshow settings" />
+
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="10,10"
+                    Orientation="Vertical"
+                    Spacing="20">
+
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding SelectPicturesFolderCommand}"
+                        ToolTipService.ToolTip="Select folder">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <SymbolIcon Symbol="Folder" />
+                            <TextBlock Text="Select folder" />
+                        </StackPanel>
+                    </Button>
+
+                    <Slider
+                        Maximum="1000.0"
+                        Minimum="0.0"
+                        Orientation="Horizontal"
+                        ThumbToolTipValueConverter="{StaticResource DelayValueConverter}"
+                        Value="{Binding SlideShowDelayPromille, Mode=TwoWay}">
+                        <Slider.Header>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <SymbolIcon Symbol="Clock" />
+                                <TextBlock Text="Slide delay" />
+                                <TextBlock>
+                                    <Span>
+                                        <Run Text="[" />
+                                        <Run Text="{Binding SlideShowDelayPromille, Converter={StaticResource DelayValueConverter}}" />
+                                        <Run Text="]" />
+                                    </Span>
+                                </TextBlock>
+                            </StackPanel>
+                        </Slider.Header>
+                    </Slider>
+
+                    <Slider
+                        Maximum="10.0"
+                        Minimum="1.0"
+                        SnapsTo="StepValues"
+                        StepFrequency="0.2"
+                        TickFrequency="1.0"   
+                        TickPlacement="BottomRight"
+                        Orientation="Horizontal"
+                        Value="{Binding SlideShowTransitionTime, Mode=TwoWay}">
+                        <Slider.Header>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE736;" />
+                                <TextBlock Text="Transition time" />
+                                <TextBlock>
+                                    <Span>
+                                        <Run Text="[" />
+                                        <Run Text="{Binding SlideShowTransitionTime}" />
+                                        <Run Text="s ]" />
+                                    </Span>
+                                </TextBlock>
+                            </StackPanel>
+                        </Slider.Header>
+                    </Slider>
+
+                </StackPanel>
+            </Grid>
+        </SplitView.Pane>
+
+        <Border
+            Name="imageBorder"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            
+            <Canvas
+                Name="imageCanvas"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+
+                <Image
+                    x:Name="ImageA"
+                    Opacity="1"
+                    Stretch="Uniform" />
+
+                <Image
+                    x:Name="ImageB"
+                    Opacity="1"
+                    Stretch="Uniform" />
+
+                <RelativePanel
+                    Name="OverlaidPanel"
+                    Canvas.Left="0"
+                    Canvas.Top="0"
+                    Canvas.ZIndex="3">
+
+                    <ToggleButton
+                        Margin="10"
+                        IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True">
+                        <SymbolIcon Symbol="Setting" />
+                    </ToggleButton>
+
+                    <ToggleButton
+                        Margin="10"
+                        Command="{Binding FullScreenCommand}"
+                        IsChecked="{Binding IsFullScreen, Mode=TwoWay}"
+                        RelativePanel.AlignBottomWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True">
+                        <StackPanel>
+                            <FontIcon Glyph="&#xE740;" Visibility="{Binding IsFullScreen, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+                            <FontIcon Glyph="&#xE73F;" Visibility="{Binding IsFullScreen, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </ToggleButton>
+
+                </RelativePanel>
+            </Canvas>
+        </Border>
+    </SplitView>
+</Page>
