@@ -13,6 +13,7 @@ using Windows.Storage;
 
 namespace PictureFrame.ViewModels;
 
+
 public partial class MainPageViewModel : ObservableObject
 {
     private readonly DispatcherTimer dispatcherTimer = new();
@@ -22,10 +23,10 @@ public partial class MainPageViewModel : ObservableObject
         get; set;
     } = () => Task.FromResult<string?>(null);
 
-    public Func<BitmapImage,Task> ViewShowNextPicture
+    public Func<BitmapImage, Transition,Task> ViewShowNextPicture
     {
         get; set;
-    } = _ => Task.CompletedTask;
+    } = (_,_) => Task.CompletedTask;
 
     public Func<bool,Task> ViewFullScreen
     {
@@ -58,6 +59,21 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("CommunityToolkit.Mvvm.SourceGenerators.ObservablePropertyGenerator", "MVVMTK0045:Using [ObservableProperty] on fields is not AOT compatible for WinRT", Justification = "<Pending>")]
     private double _slideShowTransitionTime = 2.0;
+
+    [ObservableProperty]
+    private List<Transition> _transitions = new()
+    {
+        new TransitionNone(),
+        new TransitionFade(),
+        new TransitionRandomRotateSlide(),
+        new TransitionSlideHorizontal(),
+        //new Transition { DisplayName = "Fade" },
+        //new Transition { DisplayName = "Slide" },
+        //new Transition { DisplayName = "Zoom" },
+    };
+
+    [ObservableProperty]
+    private Transition _selectedTransition = null!;
 
     public TimeSpan SlideShowTotalIntervalTimeSpan => ExponentialInterpolationHelper.PromilleToInterval(SlideShowDelayPromille) + SlideShowTransitionTimeSpan;
     public TimeSpan SlideShowTransitionTimeSpan => TimeSpan.FromSeconds(SlideShowTransitionTime);
@@ -135,7 +151,7 @@ public partial class MainPageViewModel : ObservableObject
         if (PlayIndex < Playlist.Count)
         {
             var image = await LoadImageFromDiskAsync(Playlist[PlayIndex]);
-            await ViewShowNextPicture(image);
+            await ViewShowNextPicture(image,SelectedTransition);
 
             PlayIndex++;
             if (PlayIndex >= Playlist.Count)

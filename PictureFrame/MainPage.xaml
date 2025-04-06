@@ -77,14 +77,19 @@
                         </Slider.Header>
                     </Slider>
 
+                    <ComboBox
+                        DisplayMemberPath="DisplayName"
+                        ItemsSource="{Binding Transitions}"
+                        SelectedItem="{Binding SelectedTransition, Mode=TwoWay}" />
+
                     <Slider
                         Maximum="10.0"
                         Minimum="1.0"
+                        Orientation="Horizontal"
                         SnapsTo="StepValues"
                         StepFrequency="0.2"
-                        TickFrequency="1.0"   
+                        TickFrequency="1.0"
                         TickPlacement="BottomRight"
-                        Orientation="Horizontal"
                         Value="{Binding SlideShowTransitionTime, Mode=TwoWay}">
                         <Slider.Header>
                             <StackPanel Orientation="Horizontal" Spacing="10">
@@ -109,7 +114,7 @@
             Name="imageBorder"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
-            
+
             <Canvas
                 Name="imageCanvas"
                 HorizontalAlignment="Stretch"
