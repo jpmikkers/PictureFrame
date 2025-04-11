@@ -18,9 +18,12 @@ public abstract class Transition
         visual.StopAnimation("Offset");
         visual.StopAnimation("RotationAngleInDegrees");
         visual.StopAnimation("Scale");
+        visual.StopAnimation("Orientation");
+        image.Projection = null;
         visual.Offset = Vector3.Zero;
         visual.RotationAngleInDegrees = 0.0f;
         visual.Scale = Vector3.One;
+        visual.Orientation = Quaternion.Identity;
         visual.Opacity = opacity;
     }
 

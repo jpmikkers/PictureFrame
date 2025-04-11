@@ -67,9 +67,7 @@ public partial class MainPageViewModel : ObservableObject
         new TransitionFade(),
         new TransitionRandomRotateSlide(),
         new TransitionSlideHorizontal(),
-        //new Transition { DisplayName = "Fade" },
-        //new Transition { DisplayName = "Slide" },
-        //new Transition { DisplayName = "Zoom" },
+        new TransitionPageFlip(),
     };
 
     [ObservableProperty]
